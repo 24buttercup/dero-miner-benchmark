@@ -8,7 +8,7 @@ run steps:
   2. run the miner, connecting to fake pool at the address: 127.0.0.1:14141
   
 
-95% of the code is copied from the official derohe. Please note that this is just a quick mock-up to verify what closed miners doing, approximately benchmark the real hashrate of closed source dero miners.
+95% of the code is copied from the official derohe. Please note that this is just a quick mock-up to verify what closed miners doing, approximately benchmark the real hashrate of closed source dero miners. This report was made on 03 Oct 2022, and might be obsolete in the future.
 
   * The difficulty is fixed at 500000 in the source code.
   * Reported hashrate is the hashrate that shows on the miner console.
