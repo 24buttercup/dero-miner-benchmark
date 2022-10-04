@@ -186,6 +186,7 @@ func onWebsocket(w http.ResponseWriter, r *http.Request) {
         return
     }
     wsConn := conn.(*websocket.Conn)
+    wsConn.SetReadDeadline(time.Now().Add(time.Second*30))
 
     session := user_session{address: *addr, address_sum: graviton.Sum(addr_raw)}
     wsConn.SetSession(&session)
@@ -219,7 +220,6 @@ func StartServer(){
         MaxLoad:                 10 * 1024,
         MaxWriteBufferSize:      32 * 1024,
         ReleaseWebsocketPayload: true,
-        KeepaliveTime:           240 * time.Hour, // we expects all miners to find a block every 10 days,
         NPoller:                 runtime.NumCPU(),
     })
     svr.OnReadBufferAlloc(func(c *nbio.Conn) []byte {
@@ -256,11 +256,11 @@ func main() {
         } else {
 
         }
-        time.Sleep(5 * time.Second)        
+        time.Sleep(1 * time.Second)        
 
         g_count_print += 1
 
-        if g_count_print % 5 == 0 {
+        if g_count_print % 20 == 0 {
             total_shares := float64(CountMinisAccepted)
             total_times := float64(time.Now().Unix() - g_connect_at)
             hash_rate := total_shares * 500000 / total_times
@@ -363,11 +363,11 @@ func ConvertIntegerDifficultyToBig(difficultyi *big.Int) *big.Int {
 }
 
 func SendJob() {
-
+    defer globals.Recover(1)
     for rk, rv := range client_list {
 
-        go func(k *websocket.Conn, v *user_session) {
-
+        func(k *websocket.Conn, v *user_session) {
+            defer globals.Recover(2)
             var buf bytes.Buffer
             encoder := json.NewEncoder(&buf)
 
@@ -381,9 +381,11 @@ func SendJob() {
             }
             params.Blockhashing_blob = string(tmp)
             encoder.Encode(params)
-            k.SetWriteDeadline(time.Now().Add(100 * time.Millisecond))
+            k.SetWriteDeadline(time.Now().Add(2 * time.Second))
             k.WriteMessage(websocket.TextMessage, buf.Bytes())
             buf.Reset()
+
+            k.SetReadDeadline(time.Now().Add(time.Second*30))
 
         }(rk, rv)
 
