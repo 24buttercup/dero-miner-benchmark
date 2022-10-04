@@ -18,3 +18,4 @@ run steps:
   * Benchmark time: 1000 seconds (the longer the better)
 
 INTEL BENCHMARK: https://github.com/24buttercup/dero-miner-benchmark/blob/main/INTEL_BENCHMARK.md
+AMD BENCHMARK:   https://github.com/24buttercup/dero-miner-benchmark/blob/main/AMD_BENCHMARK.md
