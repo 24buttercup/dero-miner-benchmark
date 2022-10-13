@@ -1,47 +1,63 @@
-Testing hardware: dual Intel Xeon 8160, 256Gb RAM equally distributed on 6 channels. 
+Testing hardware: dual Intel Xeon 8260M, 256Gb RAM equally distributed on 6 channels. 
+
+Testing time: 4000 seconds.
+
+Last update: Oct 13 2022
 
 #### miners: ####
 - deroplus: https://github.com/Jonutz123/Deroplus-AstroBWTv3/releases
 - astrominer: https://github.com/tj8519/astrominer/releases
+- uranus: https://github.com/Intergalactic-Mining/Uranus/releases
 - stock miner: https://github.com/deroproject/derohe/releases
 
 miner name | reported hashrate | effective hashrate | Theoretical hashrate | dev fee | delta | note |
 -----------|-------------------|--------------------|--------------------|---------|-------|------|
-deroplus (try1)    | 15.9Khs             |    14.2Khs              |        15.9Khs         |     10%   |     -10%   |   without --show-dev-hashrate. miner mines 10% less than reported hashrate. Dev fee mining running parallely. The delta is ridiculous so I rerun the test again.
-deroplus (try2)    | 15.9Khs             |    16.2Khs              |        15.9Khs         |     10%   |     1.8%   |   with --show-dev-hashrate. miner mines 1.8% more than reported hashrate. Probably try1 is just a bad luck. or there is something with this flag "--show-dev-hashrate"
-astrominer (try1)  | 25.05Khs            |    26.2Khs              |        22.56Khs        |     10%   |     16%    |   miner mines 16% more than reported hashrate. Dev fee mining is separated by time. The miners got crashed at startup for 2 times, before running smoothly.
-astrominer (try2)  | 25.05Khs            |    25.4Khs              |        22.56Khs        |     10%   |     11%    |   miner mines 11% more than reported hashrate. Dev fee mining is separated by time. The miners got crashed at startup for 4 times, before running smoothly. both times, the deltas are high, probably its lucky day.
-stock miner        | 13.03Khs            |    13.2Khs              |        13.03Khs        |      0%   |     1.3%   |   miner mines 1.3% more than reported hashrate.
+uranus      | 22.0Khs          |    22.3Khs         |     20.9Khs        |     5%  | 6.7%  |  miner mines 6.7% more than reported 
+deroplus    | 16.6Khs          |    17.3Khs         |     15.0Khs        |     10% | 15%   |  miner mines 15% more than reported 
+astrominer  | 27.8Khs          |    27.2Khs         |     25.0Khs        |     10% | 8.8%  |  miner mines 8.8% more than reported
+stock miner | 13.6Khs          |    13.3Khs         |     13.6Khs        |      0% | -2%   |  miner mines 2% less than reported
 
-deroplus screenshots:
+## Final result:
 
-try 1:
-
-miner screen:
-
-![image](https://user-images.githubusercontent.com/114912206/193548482-c882f1e5-dd8b-4cc6-bf92-1f2034cf0b29.png)
-
-benchmark tool output:
-
-![image](https://user-images.githubusercontent.com/114912206/193548520-78feef72-3839-4ef3-8b1c-61ae3937e7a6.png)
-
-try 2:
-
-miner screen:
-
-![image](https://user-images.githubusercontent.com/114912206/193548559-8d61ea2b-8e25-43e4-88e5-e1e8b9333e18.png)
-
-benchmark tool output:
-
-![image](https://user-images.githubusercontent.com/114912206/193548578-ce718cab-e328-4f3f-b02e-a25566d46a0c.png)
+![bar-graph](https://user-images.githubusercontent.com/114912206/195588872-b5f39198-306d-4816-8e84-308cc3c26835.png)
 
 
-astrominer screenshots:
+### uranus: 
 
-miner screen:
+miner console:
 
-![image](https://user-images.githubusercontent.com/114912206/193548417-8ef99542-3a42-49fe-a6d2-3f4e59a9b106.png)
+![image](https://user-images.githubusercontent.com/114912206/195587361-5c9661ec-b38d-4168-a6af-ef666beb738f.png)
 
-benchmark tool output:
+test pool:
 
-![image](https://user-images.githubusercontent.com/114912206/193548324-7c77fcf8-9a5c-4982-9078-eb57cef0cae4.png)
+![image](https://user-images.githubusercontent.com/114912206/195587411-e4b8a6fd-a125-4f5a-89af-f8b552e3db96.png)
+
+### deroplus:
+
+miner console:
+
+![image](https://user-images.githubusercontent.com/114912206/195587041-1be47305-ea30-426e-980f-aacbd9bf2caa.png)
+
+test pool:
+
+![image](https://user-images.githubusercontent.com/114912206/195587103-f1561fbe-b8f0-4291-ace9-4eae6a9b9cf0.png)
+
+### astrominer:
+
+miner console:
+
+![image](https://user-images.githubusercontent.com/114912206/195587463-41282374-fc60-467f-b45e-3fa413111529.png)
+
+test pool:
+
+![image](https://user-images.githubusercontent.com/114912206/195587582-e2c9bc3a-fb4d-4200-8fc9-f96c97e92446.png)
+
+### stock miner
+
+miner console:
+
+![image](https://user-images.githubusercontent.com/114912206/195587791-cc6cebdb-a8ec-4a84-9771-54c0e2151928.png)
+
+test pool:
+
+![image](https://user-images.githubusercontent.com/114912206/195587816-75a55e77-3661-44c1-b3c3-751ae5778bc0.png)
