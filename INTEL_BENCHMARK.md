@@ -19,7 +19,8 @@ stock miner | 13.6Khs          |    13.3Khs         |     13.6Khs        |      
 
 ## Final result:
 
-![bar-graph](https://user-images.githubusercontent.com/114912206/195588872-b5f39198-306d-4816-8e84-308cc3c26835.png)
+![bar-graph](https://user-images.githubusercontent.com/114912206/195590953-38b45d9d-fbd4-4cce-8b99-157d1e7462eb.png)
+
 
 
 ### uranus: 
