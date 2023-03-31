@@ -14,7 +14,7 @@ import (
 
     // "bufio"
     // "net"
-    // "os"
+    "os"
     // "time"
     // "math/rand"
     "github.com/deroproject/derohe/rpc"
@@ -45,7 +45,8 @@ var memPool = sync.Pool{
 var HOST_PORT = "0.0.0.0:14141"
 
 var WORK rpc.GetBlockTemplate_Result
-var WORK_JSON = "{\"jobid\":\"1664774852132.0.notified\",\"blockhashing_blob\":\"714e2400000f8257deca962a00000000528eef7f98188de81c9d17931e0635e7000000002e81dc49ee9ecd9e6253d583\",\"difficulty\":\"500000\",\"difficultyuint64\":500000,\"height\":1016407,\"prev_hash\":\"deca962a206280d256fe9f0b99751998b9a700d65660ea0fea467cfc6907e461\",\"epochmilli\":0,\"blocks\":0,\"miniblocks\":0,\"rejected\":0,\"lasterror\":\"\",\"status\":\"\"}"
+var WORK_JSON = "{\"jobid\":\"1664774852132.0.notified\",\"blockhashing_blob\":\"714e2400000f8257deca962a00000000528eef7f98188de81c9d17931e0635e7000000002e81dc49ee9ecd9e6253d583\",\"difficulty\":\"11111\",\"difficultyuint64\":11111,\"height\":1016407,\"prev_hash\":\"deca962a206280d256fe9f0b99751998b9a700d65660ea0fea467cfc6907e461\",\"epochmilli\":0,\"blocks\":0,\"miniblocks\":0,\"rejected\":0,\"lasterror\":\"\",\"status\":\"\"}"
+// var WORK_JSON = "{\"jobid\":\"1673865549953.0.notified\", \"blockhashing_blob\":\"714e2400000f8257deca962a00000000528eef7\", \"difficulty\":\"0\",\"difficultyuint64\":0,\"height\":1503228,\"prev_hash\":\"c4800f659493946116a97a1b364cf325db7640615d525ff847f1131ad8facb28\",\"epochmilli\":0,\"blocks\":0,\"miniblocks\":0,\"rejected\":0,\"lasterror\":\"Node is ready in (4) ...\",\"status\":\"\"}"
 
 var svr   *nbhttp.Server
 type user_session struct {
@@ -91,19 +92,31 @@ var CountMinisRejected int64 // total rejected // note we are only counting reje
 var CountBlocks int64        //  total blocks found as integrator, note that block can still be a orphan
 var mini_found_time []int64 // this array contains a epoch timestamp in int64
 var rate_lock sync.Mutex
+var mapHash = make(map[string]int)
 
 func Accept_new_block(miniblock_blob []byte) bool {
     PoW := astrobwtv3.AstroBWTv3(miniblock_blob)
-    block_difficulty := big.NewInt(500000)
+    block_difficulty := big.NewInt(11111)
 
     have := HashToBig(PoW)
     want := ConvertIntegerDifficultyToBig(block_difficulty)
+
+    s := fmt.Sprintf("Have:%064x\n", have)
+    if _, ok := mapHash[s]; ok {
+        fmt.Println("---------------")
+        fmt.Println("Duplicated nonce")
+        fmt.Println("---------------")
+    } else {
+        mapHash[s] = 1
+    }
+
     fmt.Printf("Have:%064x\n", have)
     fmt.Printf("Want:%064x\n", want)
 
     if CheckPowHashBig(PoW, block_difficulty) == true {
         return true
     }
+
     return false
 }
 
@@ -142,13 +155,18 @@ func newUpgrader() *websocket.Upgrader {
         sresult := Accept_new_block(mbl_block_data_bytes)
 
         if sresult {
-            fmt.Println("Submitted block accepted")
+            fmt.Println("OK!!!")
             atomic.AddInt64(&CountMinisAccepted, 1)
             sess.miniblocks++
         } else {
+            fmt.Println("----------------")
             fmt.Println("Submitted block rejected")
+            fmt.Println("----------------")
             atomic.AddInt64(&CountMinisRejected, 1)
             sess.rejected++
+            fmt.Println(p.MiniBlockhashing_blob)
+            fmt.Println(mbl_block_data_bytes)
+            os.Exit(1)
         }
 
     })
@@ -256,14 +274,14 @@ func main() {
         } else {
 
         }
-        time.Sleep(1 * time.Second)        
+        time.Sleep(1 * time.Second)
 
         g_count_print += 1
 
-        if g_count_print % 20 == 0 {
+        if g_count_print % 2 == 0 {
             total_shares := float64(CountMinisAccepted)
             total_times := float64(time.Now().Unix() - g_connect_at)
-            hash_rate := total_shares * 500000 / total_times
+            hash_rate := total_shares * 11111 / total_times
             fmt.Println("Hashrate: ", hash_rate, "H/s - Share: ", total_shares, " uptime: ", total_times)
         }
     }
@@ -380,6 +398,8 @@ func SendJob() {
                 tmp[12+i] = rand_str[i]
             }
             params.Blockhashing_blob = string(tmp)
+            params.Height += uint64(randmath.Intn(20))
+            
             encoder.Encode(params)
             k.SetWriteDeadline(time.Now().Add(2 * time.Second))
             k.WriteMessage(websocket.TextMessage, buf.Bytes())
